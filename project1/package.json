@@ -1,0 +1,14 @@
+{
+  "name": "project_1",
+  "version": "1.0.0",
+  "description": "client side interface for gab server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steven Faulkner",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^6.1.3"
+  }
+}
