@@ -9,6 +9,7 @@
   "author": "Steven Faulkner",
   "license": "ISC",
   "dependencies": {
+    "blessed": "^0.1.81",
     "ws": "^6.1.3"
   }
 }
