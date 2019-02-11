@@ -16,7 +16,7 @@ userMap = new Map();
 
 colorList = ['#FF0000', '#FFFFFF', '#008000', '#0000FF', '#FF00FF', '#880080', '#800000', '#00FF00', '#00FFFF' ];
 
-/***** cl-ui begins, screen is parent and all children are placed into grid *****/
+/***** tui begins, screen is parent and all children are placed into grid *****/
 /***** that way the boxes will uniformly resize as the screen resizes  *****/
 screen = blessed.screen({
     smartCSR: true,
@@ -138,18 +138,23 @@ function sidebarHandler(data){
     
   let users = data.split(',');
 
-    sidebar.clearItems();
-
+    
+    sidebar.setText();
+    
+    
     users.forEach(element => {
       
       //add any users that were in chat before client to userMap
       if(!userMap.has(element)){
         userMap.set(element,colorList[Math.floor(Math.random() * colorList.length)]);
       }
+      let color = userMap.get(element);
       if(element == userName){
-        sidebar.pushItem(element + ' (you)');
+        
+        sidebar.pushLine(chalk.hex(color)(element + ' (you)'));
       }else{
-        sidebar.pushItem(element);
+      
+        sidebar.pushLine(chalk.hex(color)(element));
       }
     });
 }
@@ -158,14 +163,16 @@ function sidebarHandler(data){
 function addRemoveUser(data){
   
   let user = data.split(' ');
-
+  
   if(user[2] == 'joined'){   
      userMap.set(user[0],colorList[Math.floor(Math.random() * colorList.length)]);
-     
+     let color = userMap.get(user[0]);
+
+
     if(user[0] == userName){
-      sidebar.pushItem(user[0]+' (you)');
+      sidebar.pushLine(chalk.hex(color)(user[0]+' (you)'));
     }else{
-      sidebar.pushItem(user[0]);
+      sidebar.pushLine(chalk.hex(color)(user[0]));
     }
   }else{
     userMap.delete(user[0]);
