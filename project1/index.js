@@ -14,7 +14,7 @@ var ws;
 
 userMap = new Map();
 
-colorList = ['red','green','yellow','magenta','cyan','white','redBright','greenBright','yellowBright','blueBright','magentaBright','cyanBright','whiteBright'];
+colorList = ['#FF0000', '#FFFFFF', '#008000', '#0000FF', '#FF00FF', '#880080', '#800000', '#00FF00', '#00FFFF' ];
 
 /***** cl-ui begins, screen is parent and all children are placed into grid *****/
 /***** that way the boxes will uniformly resize as the screen resizes  *****/
@@ -45,7 +45,7 @@ box = grid.set(0, 0, 5, 5, contrib.log, {
   style:
   { 
     bg: 'black',
-    fg: 'green'
+    fg: 'white'
   }
 })
 
@@ -115,23 +115,25 @@ inputText.on('submit', (line) => {
 ws.on('message', function incoming(message) {
     
     let temp = JSON.parse(message);
+    let color = userMap.get(temp.from);
+    
     switch(temp.kind){
     
-    case 'chat':       box.log(temp.from + " : " + temp.data);
+    case 'chat':       box.log(chalk.hex(color)(temp.from) + " : " + temp.data, );
                         break;
-    case 'connection': box.log(temp.from + " : " + temp.data);
+    case 'connection': box.log(chalk.yellowBright(temp.from) + " : " + temp.data);
                         addRemoveUser(temp.data);
                         break;
     case 'userlist':   sidebarHandler(temp.data);
                         break;
-    case 'error':      box.log(temp.from + " : " + temp.data);
+    case 'error':      box.log(chalk.red(temp.from + " : " + temp.data));
                         break;
     }
     screen.render();
 
 });
 
-/**** populates the sidebar with userlist, since each usernake is unique can check the names against our global and mark user appropriately *****/
+/**** populates the sidebar with userlist, since each username is unique can check the names against our global and mark user appropriately *****/
 function sidebarHandler(data){
     
   let users = data.split(',');
@@ -140,8 +142,12 @@ function sidebarHandler(data){
 
     users.forEach(element => {
       
+      //add any users that were in chat before client to userMap
+      if(!userMap.has(element)){
+        userMap.set(element,colorList[Math.floor(Math.random() * colorList.length)]);
+      }
       if(element == userName){
-      sidebar.pushItem(element + ' (you)');
+        sidebar.pushItem(element + ' (you)');
       }else{
         sidebar.pushItem(element);
       }
@@ -153,26 +159,19 @@ function addRemoveUser(data){
   
   let user = data.split(' ');
 
-  if(user[2] == 'joined'){
-    userMap.set(user[0],colorList[4]);
-    
+  if(user[2] == 'joined'){   
+     userMap.set(user[0],colorList[Math.floor(Math.random() * colorList.length)]);
+     
     if(user[0] == userName){
-      colors = userMap.get(user[0]);
-      //sidebar.pushLine(colorList[6]);
-      sidebar.pushItem((user[0]+' (you)'));
+      sidebar.pushItem(user[0]+' (you)');
     }else{
       sidebar.pushItem(user[0]);
     }
   }else{
-    
     userMap.delete(user[0]);
     sidebar.removeItem(user[0]);
   }
   
-}
-/**** color generator function *****/
-function randomColor() {
-  return [parseInt(Math.random() * 255),parseInt(Math.random() * 255),parseInt(Math.random() * 255)];
 }
 
 /***** heartbeat function, times out if no pong is heard back from server  *****/
