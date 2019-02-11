@@ -2,9 +2,22 @@ const WebSocket = require('ws');
 const blessed = require('blessed');
 const contrib = require('blessed-contrib')
 const cliCurosr = require('cli-cursor');
+const chalk = require('chalk');
+
+/***** get user input for connection as cli arguments or set to defaults *****/
+host = process.argv[2] || 'localhost';
+port = process.argv[3] || '4930';
+userName = process.argv[4] || 'username';
 
 cliCurosr.hide();
+var ws;
 
+userMap = new Map();
+
+colorList = ['red','green','yellow','magenta','cyan','white','redBright','greenBright','yellowBright','blueBright','magentaBright','cyanBright','whiteBright'];
+
+/***** cl-ui begins, screen is parent and all children are placed into grid *****/
+/***** that way the boxes will uniformly resize as the screen resizes  *****/
 screen = blessed.screen({
     smartCSR: true,
     dockBorders: true,
@@ -16,48 +29,37 @@ screen = blessed.screen({
     ignoreDockContrast: true
 })
 
-grid = new contrib.grid({rows: 5, cols: 5, screen: screen})
-
-host = process.argv[2] || 'localhost';
-port = process.argv[3] || '4930';
-userName = process.argv[4] || 'username';
-
-const ws = new WebSocket(`ws://${host}:${port}/?username=${userName}`);
-
-
-
-screen.key(['escape', 'q', 'C-c'], (ch, key) => (process.exit(0)));
+/***** escape sequence and focus to input box *****/
+screen.key(['escape'], (ch, key) => (process.exit(0)));
 
 screen.key('enter', (ch, key) => {
   inputText.focus();
 });
 
 
+grid = new contrib.grid({rows: 5, cols: 5, screen: screen})
+
 box = grid.set(0, 0, 5, 5, contrib.log, {
   label: 'Server Chat',
+  scrollable: true,
   style:
-{ 
-  border: {
-  type: 'line'
-  },
-  bg: 'black',
-  fg: 'green'
-}})
+  { 
+    bg: 'black',
+    fg: 'green'
+  }
+})
 
 sidebar = grid.set(0,4,5,2, blessed.list, {
   label: 'User List',
-  style:
-  {
     alwaysScroll: true,
     scrollable: true, 
     mouse: true, 
     list: [''],
-    border: {
-      type: 'line'
-    },
-    bg: 'black',
-    fg: 'white'
-  }
+    style:
+    {
+      bg: 'black'
+    }
+
 })
 
 inputText = grid.set(4,0,1,5, blessed.textbox, {
@@ -65,26 +67,32 @@ inputText = grid.set(4,0,1,5, blessed.textbox, {
   inputOnFocus: true,
   keys: true,
   mouse: true,
-  stle:
-  {
-    border: {
-      type: 'line'
-    }
-  }
+  
 })
 
 
 
-  // Append elements box to the screen.
-  screen.append(box);
-  screen.append(inputText);
-  screen.append(sidebar);
-
-  inputText.focus();
-  screen.render();
-
+// Append elements to the screen.
+screen.append(box);
+screen.append(inputText);
+screen.append(sidebar);
+inputText.focus();
+screen.render();
 
 
+  ws = new WebSocket(`ws://${host}:${port}/?username=${userName}`);
+
+ 
+  /* check for open connection 
+  *  this interval must be at least as long
+  *  as server interval, most likely longer
+  *  to deal with any latency along the way
+  */ 
+  ws.on('open', heartbeat);
+  ws.on('ping', heartbeat);
+  ws.on('close', function clear() {
+    clearTimeout(this.pingTimeout);
+  });
 
 
 inputText.on('submit', (line) => {
@@ -96,12 +104,14 @@ inputText.on('submit', (line) => {
             to: 'all',
             kind: 'chat',
             data: line
-        }))
+        })
+        )
     }
     inputText.clearValue();
     inputText.focus();
 });
 
+/**** handles all incoming messages,shoud not have to check for proper json since server does that before sending *****/
 ws.on('message', function incoming(message) {
     
     let temp = JSON.parse(message);
@@ -121,13 +131,15 @@ ws.on('message', function incoming(message) {
 
 });
 
-
+/**** populates the sidebar with userlist, since each usernake is unique can check the names against our global and mark user appropriately *****/
 function sidebarHandler(data){
-    let users = data.split(',');
+    
+  let users = data.split(',');
 
     sidebar.clearItems();
 
     users.forEach(element => {
+      
       if(element == userName){
       sidebar.pushItem(element + ' (you)');
       }else{
@@ -136,31 +148,53 @@ function sidebarHandler(data){
     });
 }
 
-
+/**** adds or removes users on connection event from server *****/
 function addRemoveUser(data){
   
   let user = data.split(' ');
 
   if(user[2] == 'joined'){
+    userMap.set(user[0],colorList[4]);
+    
     if(user[0] == userName){
-      sidebar.pushItem(user[0]+'(you)');
+      colors = userMap.get(user[0]);
+      //sidebar.pushLine(colorList[6]);
+      sidebar.pushItem((user[0]+' (you)'));
     }else{
       sidebar.pushItem(user[0]);
     }
   }else{
+    
+    userMap.delete(user[0]);
     sidebar.removeItem(user[0]);
   }
   
-  
+}
+/**** color generator function *****/
+function randomColor() {
+  return [parseInt(Math.random() * 255),parseInt(Math.random() * 255),parseInt(Math.random() * 255)];
 }
 
+/***** heartbeat function, times out if no pong is heard back from server  *****/
+function heartbeat() {
+  clearTimeout(this.pingTimeout);
+
+  this.pingTimeout = setTimeout(() => {
+    box.log("Connection to sever lost");
+    this.terminate();
+  }, 30000 + 1000);
+}
+
+/**** interval function to ping server for userlist command *****/
 setInterval(() =>{
-  ws.send(JSON.stringify({
-    from: userName,
-    to: '',
-    kind: 'userlist',
-    data: ''
-  }))
-  inputText.focus();
+  
+    ws.send(JSON.stringify({
+      from: userName,
+      to: '',
+      kind: 'userlist',
+      data: ''
+    }))
+    inputText.focus();
+
  
 }, 1000)
