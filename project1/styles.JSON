@@ -1,8 +1,10 @@
 {
- "expression": "wonderful",
- "style" : "bold",
- "expression": "hello", 
- "style" : "yellow",
- "expression": "^(green|gold)",
- "style" : "italic"
+"styles" :[
+ {"expression": "wonderful",
+ "style" : "bold"},
+ {"expression": "hello", 
+ "style" : "yellow"},
+ {"expression": "^(green|gold)",
+ "style" : "italic"}
+ ]
 }
