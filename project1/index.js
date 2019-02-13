@@ -169,10 +169,13 @@ ws.on('message', function incoming(message) {
                         try{
                           
                           styles.styles.forEach(element => {
+             
                           let rex = new RegExp(element.expression);
-                          match = rex.exec(temp.data);
-                          temp.data = temp.data.replace(rex, "[32m " + element.expression + " [39m");
-        
+                          if(element.expression == styles.styles[0].expression){
+                            temp.data = temp.data.replace(rex,   '\x1b[1;33m' + element.expression +'\x1b[0m');
+                          }else{
+                            temp.data = temp.data.replace(rex,   '\x1b[1;31m' +  element.expression +'\x1b[0m');
+                          }
                           })  
                           }catch(e){}
                           
@@ -180,7 +183,6 @@ ws.on('message', function incoming(message) {
                         addRemoveUser(temp.data);
                         break;
     case 'direct':     directMessageBox.show();
-                        directMessageButton.show();
                         directMessageBox.log(chalk.hex(color)(temp.from + ' (direct message)') + ' : ' + chalk.greenBright(temp.data));
                         break;
     case 'userlist':   sidebarHandler(temp.data);
