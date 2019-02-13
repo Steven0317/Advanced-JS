@@ -1,10 +1,7 @@
 {
 "styles" :[
- {"expression": "wonderful",
- "style" : "bold"},
- {"expression": "hello", 
- "style" : "yellow"},
- {"expression": "^(green|gold)",
- "style" : "italic"}
- ]
+ {"expression": "joined",
+ "style" : "#FFFF00"},
+ {"expression": "left", 
+ "style" : "#FF0000"}]
 }

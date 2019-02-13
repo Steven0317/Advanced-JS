@@ -3,21 +3,23 @@ const blessed = require('blessed');
 const contrib = require('blessed-contrib')
 const cliCurosr = require('cli-cursor');
 const chalk = require('chalk');
-var fs = require('fs'), styles;
+var fs = require('fs');
 
+styles = [];
 /***** get user input for connection as cli arguments or set to defaults *****/
 host = process.argv[2] || 'localhost';
 port = process.argv[3] || '4930';
 userName = process.argv[4] || 'username';
 
 cliCurosr.hide();
+userMap = new Map();
 
+/****read from json file ****/
 fs.readFile('./styles.json', (err,data)=> {
   if(err) throw err;
   styles = JSON.parse(data);
-  console.log(styles);
 })
-userMap = new Map();
+
 
 /**** user color array, would be bigger but microsoft doesnt like using colors in their terminals *****/
 colorList = ['#FF0000', '#FFFFFF', '#008000', '#0000FF', '#FF00FF', '#880080', '#800000', '#00FF00', '#00FFFF' ];
@@ -45,6 +47,7 @@ screen.key('enter', (ch, key) => {
 
   grid = new contrib.grid({rows: 5, cols: 5, screen: screen})
 
+  /**** Main chatbox for all group chat/ error logs etc *****/
   box = grid.set(0, 0, 5, 5, contrib.log, {
     label: 'Server Chat',
     scrollable: true,
@@ -55,6 +58,7 @@ screen.key('enter', (ch, key) => {
     }
   })
 
+  /**** sidebox that populates list of usernames connected to server *****/
   sidebar = grid.set(0,4,6,2, blessed.list, {
     label: 'User List',
       alwaysScroll: true,
@@ -68,6 +72,7 @@ screen.key('enter', (ch, key) => {
 
   })
 
+  /**** input textbox will parse and send message dependent on parameters *****/
   inputText = grid.set(4,0,2,5, blessed.textbox, {
     label: 'Message',
     inputOnFocus: true,
@@ -76,6 +81,7 @@ screen.key('enter', (ch, key) => {
     
   })
 
+  /***** Direct message box, will only appear if dms have eitheer been sent or received *****/
   directMessageBox = grid.set(0,3,5,2, blessed.log, {
     label: 'Direct Message',
     style:
@@ -83,12 +89,14 @@ screen.key('enter', (ch, key) => {
       bg: 'black'
     }
   })
+
   // Append elements to the screen.
   screen.append(box);
   screen.append(directMessageBox);
   screen.append(inputText);
   screen.append(sidebar);
   directMessageBox.hide();
+
   inputText.focus();
 
 createConnection(userName);
@@ -98,22 +106,33 @@ inputText.on('submit', (line) => {
     
     if(line.trim() != '')
     {
-      //check for open connection on client side
+      //check for open connection on client side before sending message
       if(ws.readyState == ws.OPEN){
           
         //check for direct message 
           if(/^[@]/.test(line)){
+           
             let message = line.split(' ');
             let user = message[0].substring(1,message[0].length);
-           
-              ws.send(JSON.stringify({
+            let color = userMap.get(userName);
+             
+            ws.send(JSON.stringify({
                 from: userName,
                 to: user,
                 kind: 'direct',
                 data : line.substring(message[0].length,line.length)
-              }))    
+              }))   
+             
+              directMessageBox.show();
+              directMessageBox.log(chalk.hex(color)(userName + ' (direct message)') + ' : ' + chalk.greenBright(line.substring(message[0].length,line.length)));
            
+          //hide dm box command   
+          }else if(/^[!esc]/.test(line)){
+           
+            directMessageBox.hide();
+         
           }else{
+          
             ws.send(JSON.stringify({
                 from: userName,
                 to: 'all',
@@ -121,6 +140,7 @@ inputText.on('submit', (line) => {
                 data: line
             }))
         }
+        //attempt to reconnect on event of error
       }else{
         if(/[\w]{3,10}/.test(line)){
           createConnection(line);
@@ -138,15 +158,29 @@ ws.on('message', function incoming(message) {
     
     let temp = JSON.parse(message);
     let color = userMap.get(temp.from);
-    
+
     switch(temp.kind){
     
     case 'chat':       box.log(chalk.hex(color)(temp.from) + " : " + temp.data, );
                         break;
-    case 'connection': box.log(chalk.yellowBright(temp.from) + " : " + temp.data);
+    case 'connection': 
+                        /**this throws an error on startup, ignoring it will **/
+                        /** allow the program to continue to execute **/
+                        try{
+                          
+                          styles.styles.forEach(element => {
+                          let rex = new RegExp(element.expression);
+                          match = rex.exec(temp.data);
+                          temp.data = temp.data.replace(rex, "[32m " + element.expression + " [39m");
+        
+                          })  
+                          }catch(e){}
+                          
+                        box.log(chalk.yellowBright(temp.from) + " : " + temp.data);
                         addRemoveUser(temp.data);
                         break;
-    case 'direct':     directMessageBox.show(); 
+    case 'direct':     directMessageBox.show();
+                        directMessageButton.show();
                         directMessageBox.log(chalk.hex(color)(temp.from + ' (direct message)') + ' : ' + chalk.greenBright(temp.data));
                         break;
     case 'userlist':   sidebarHandler(temp.data);
@@ -161,7 +195,8 @@ ws.on('message', function incoming(message) {
 
 });
 
-/**** populates the sidebar with userlist, since each username is unique can check the names against our global and mark user appropriately *****/
+/**** populates the sidebar with userlist, since each username is unique can check the names against our global map and mark user appropriately *****/
+/****  marking this way eliminats the need to send a whoami request to the server*****/
 function sidebarHandler(data){
  
   let users = data.split(',');
@@ -188,6 +223,7 @@ function sidebarHandler(data){
 function addRemoveUser(data){ 
   
   let user = data.split(' ');
+  
  
   if(user[2] == 'joined'){   
      
