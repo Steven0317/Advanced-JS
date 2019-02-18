@@ -1,0 +1,16 @@
+to compile the program:
+    node . url portnumber username
+If an unsuccesful connection is made the client will display the error message recieved. If the error is an invalid username the user can
+simply enter a username in the text box and the client will attempt to reconnect. Note there is a graphical bug that does not update the client 
+upon succesful connection after a failed connection event.
+
+The username and who am i features are taken care of automatically with the user list side bar, which auto populates the list when clients enter and 
+leave the server as well as pinging the server on a set interval.
+
+Direct messaging is acomplished by the @ symbol preceeding any name from the userlist followed by the message you wish to send an example is:
+    @username hello!
+Direct messaging contains an additional feature where all direct messages will appear in a seperate message box from the main chat client. This box 
+will automatically open when a direct message is sent and remain open until the command '!esc' is entered which will hide the box but not delete 
+the direct messages.
+
+exiting the server can be accomplished by hitting esc two times.
