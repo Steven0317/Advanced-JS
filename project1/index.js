@@ -1,3 +1,13 @@
+/*
+* Steven Faulkner u9616-1844
+* Project 1
+* chat client interface that has become aggressively
+* bloated by using blessed and blessed-contrib
+*/
+
+
+
+
 const WebSocket = require('ws');
 const blessed = require('blessed');
 const contrib = require('blessed-contrib')
@@ -5,6 +15,7 @@ const cliCurosr = require('cli-cursor');
 const chalk = require('chalk');
 var fs = require('fs');
 
+//json styles array
 styles = [];
 /***** get user input for connection as cli arguments or set to defaults *****/
 host = process.argv[2] || 'localhost';
@@ -81,7 +92,7 @@ screen.key('enter', (ch, key) => {
     
   })
 
-  /***** Direct message box, will only appear if dms have eitheer been sent or received *****/
+  /***** Direct message box, will only appear if dms have either been sent or received *****/
   directMessageBox = grid.set(0,3,5,2, blessed.log, {
     label: 'Direct Message',
     style:
@@ -164,8 +175,7 @@ ws.on('message', function incoming(message) {
     case 'chat':       box.log(chalk.hex(color)(temp.from) + " : " + temp.data, );
                         break;
     case 'connection': 
-                        /**this throws an error on startup, ignoring it will **/
-                        /** allow the program to continue to execute **/
+                        
                         try{
                           
                           styles.styles.forEach(element => {
