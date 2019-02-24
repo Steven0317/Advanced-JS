@@ -1,0 +1,19 @@
+{
+  "name": "fileview",
+  "version": "1.0.0",
+  "description": "A visual tree application for file explorer",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steven Faulkner",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^4.0.5",
+    "three": "^0.101.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.3333"
+  }
+}
