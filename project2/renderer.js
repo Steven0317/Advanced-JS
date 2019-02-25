@@ -5,10 +5,10 @@ init();
 function init() {
 
     
-        WIDTH  = 800,
-            HEIGHT = 600;
-        
-        renderer = new THREE.WebGLRenderer();
+        WIDTH  = window.innerWidth ,
+        HEIGHT = 600;
+        drawingSurface = document.getElementById('treeview');
+        renderer = new THREE.WebGLRenderer({antialias: true, canvas: drawingSurface});
         renderer.setSize( WIDTH,HEIGHT );
         document.body.appendChild( renderer.domElement );
             
@@ -28,7 +28,7 @@ function init() {
 
         // Create an event listener that resizes the renderer with the browser window.
         window.addEventListener('resize', function() {
-            WIDTH = window.innerWidth,
+            WIDTH = window.innerWidth ,
             HEIGHT = window.innerHeight;
             renderer.setSize(WIDTH, HEIGHT);
             camera.aspect = WIDTH / HEIGHT;

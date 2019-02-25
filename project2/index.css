@@ -1,0 +1,22 @@
+html,
+body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#navbar{
+    width: 37%;
+    margin: 0;
+    float: left
+}
+
+#treeview{
+    width: 63%;
+    height: 100%;
+    margin: 0;
+    touch-action: none;
+    float: left;
+}
