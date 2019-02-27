@@ -6,4 +6,8 @@ const homedir = require('os').homedir();
 const tree = dirtree(homedir);
 
 container = document.getElementById("directory");
-container.appendChild(homedir);
+
+newItem = docuemnt.createELement('li');
+newItem.innerText = homeDir.toString();
+
+container.appendChild(newItem);

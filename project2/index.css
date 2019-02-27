@@ -25,6 +25,7 @@ body {
   max-width: 20%;
   
 }
+#directory {padding: 5px 10px;}
 
 #treeview{
   height: 100%;
