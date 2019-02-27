@@ -21,7 +21,7 @@ function init() {
         scene = new THREE.Scene(w,h);
             
         camera = new THREE.PerspectiveCamera(
-            50,             // Field of view
+            60,             // Field of view
             w/h,            // Aspect ratio
             .01,            // Near plane
             20000           // Far plane
@@ -29,9 +29,9 @@ function init() {
         camera.position.set(2,10,12);
         
         camera.lookAt(scene.position);
-    
+        
         scene.add(camera);
-
+        
         // Create an event listener that resizes the renderer with the browser window.
         window.addEventListener('resize', function() {
           w = container.offsetWidth;
@@ -56,5 +56,6 @@ function init() {
         // Set the background color of the scene.
         renderer.setClearColor(0x000000, 1);
         renderer.render( scene, camera );
-                                                                                             
+                  
+        
 };

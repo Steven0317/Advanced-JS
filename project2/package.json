@@ -10,7 +10,9 @@
   "author": "Steven Faulkner",
   "license": "ISC",
   "dependencies": {
+    "directory-tree": "^2.2.1",
     "electron": "^4.0.5",
+    "get-folder-size": "^2.0.1",
     "three": "^0.101.1"
   },
   "devDependencies": {
