@@ -8,6 +8,6 @@ const tree = dirtree(homedir);
 container = document.getElementById("directory");
 
 newItem = docuemnt.createELement('li');
-newItem.innerText = homeDir.toString();
+newItem.innerText = "hello";
 
 container.appendChild(newItem);
