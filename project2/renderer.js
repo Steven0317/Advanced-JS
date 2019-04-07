@@ -48,10 +48,11 @@ function init() {
         
         //box creation
         geometry = new THREE.BoxGeometry( 8, 1, 8 );
-        material = new THREE.MeshLambertMaterial( { color: 'lightgray' } );
+        material = new THREE.MeshLambertMaterial( { color: 'gray' } );
         mesh = new THREE.Mesh( geometry, material );
         
         scene.add( mesh );
+       
 
         // Set the background color of the scene.
         renderer.setClearColor(0x000000, 1);
