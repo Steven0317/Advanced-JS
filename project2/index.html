@@ -4,22 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="index.css">
+    
 </head>
 
 <body>
    <div id="container">
        <div id="navbar">
-        <ul id="directory">   
+        <ul id="directory">  
+                <script>
+                        require("./fileSystem.js")    
+                </script> 
         </ul>
         </div>
             <div id="treeview">
                 <script>
-                    require('./renderer.js')
+                    require("./renderer.js")
                 </script>
             </div>
     </div>
-   
-    <script src="fileSystem.js"></script>
+
+    
 </body>
 
 </html>

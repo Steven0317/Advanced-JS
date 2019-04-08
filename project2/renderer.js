@@ -1,4 +1,5 @@
 const THREE = require('three');
+
 init();
 
 
@@ -9,7 +10,7 @@ function init() {
         HEIGHT = 600;
         container = document.getElementById('treeview');
         renderer = new THREE.WebGLRenderer({antialias: true});
-        //renderer.setPixelRatio(window.devicePixelRatio);
+        
         
         
         w = container.offsetWidth;
@@ -57,6 +58,5 @@ function init() {
         // Set the background color of the scene.
         renderer.setClearColor(0x000000, 1);
         renderer.render( scene, camera );
-                  
         
 };
