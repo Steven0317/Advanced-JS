@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const getSize = require('get-folder-size');
 const hide = require('hidefile');
-
+homedir = '/'
 init();
 
 
@@ -10,11 +10,11 @@ function init(){
     
     ul = document.getElementById("directory");
    
-    fs.readdir('/',(err, file) => {
+    fs.readdir(homedir,(err, file) => {
         
         file.forEach(file => {
            
-            hide.shouldBeHidden('/' + file, (err, result) => {
+            hide.shouldBeHidden(homedir + file, (err, result) => {
                
                 if(err !== null) throw err;
                 if(!result) {

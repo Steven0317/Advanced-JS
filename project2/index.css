@@ -21,6 +21,15 @@ button {
   text-align: left;
   font-size: 12px;
 }
+::-webkit-scrollbar {     
+  background-color: #fff;
+  width: .8em
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+  background:  gray
+}
 #container{
   display: flex;
   height: 100%;
