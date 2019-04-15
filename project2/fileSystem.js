@@ -8,17 +8,19 @@ init();
 
 function init(){
     
-    ul = document.getElementById("directory");
+    ul = document.getElementById("display");
    
     fs.readdir(homedir,(err, file) => {
         
+        if(err !== null) throw err;
+
         file.forEach(file => {
            
             hide.shouldBeHidden(homedir + file, (err, result) => {
                
                 if(err !== null) throw err;
                 if(!result) {
-                    li = document.createElement("li");
+                    li = document.createElement("div");
                     link = document.createElement("button");
                     link.innerHTML = file.toString();
                     //link.href = "http://www.google.com";
