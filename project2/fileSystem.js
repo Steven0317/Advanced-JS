@@ -1,12 +1,54 @@
 const fs = require('fs');
 const path = require('path');
 const hide = require('hidefile');
+const renderer = require('./renderer.js');
 homedir = '/'
 
 
+//init();
+Init();
+function Init(){
+    
+    renderer.Init();
+    fs.readdir(homedir,(err,file) =>{
+        let i = 0;
+        let j = 0;
+        if(err !== null) throw err;
 
-init();
+        file.forEach(file => {
 
+            hide.shouldBeHidden(homedir + file, (err, result) => {
+               
+                if(err !== null) throw err;
+                
+                if(!result) {
+                    if(fs.statSync(path.join(homedir,file)).isDirectory()) {
+                         renderer.createObject(
+                                                file,
+                                                path.join(homedir,file,),
+                                                'dir',
+                                                i
+                                                )
+                         }
+                         if(i >=5){
+                             i = 0;
+                         }else {
+                         i++;
+                         }
+                        j++;
+
+                }
+
+            })
+
+        })
+
+    })
+}
+
+function clickEvent(btn,text,path){
+    console.log(text);
+}
 
 function init(){
    
@@ -34,15 +76,19 @@ function init(){
                    
                     if(fs.statSync(path.join(homedir,file)).isDirectory()) {
                         elem.setAttribute("src", "Images/Folder-128.png");
-                        link.innerHTML = file.toString();
                         link.value = path.join(homedir,file.toString(),'/');
+                        let sp = document.createElement('span');
+                        sp.textContent = file.toString();
                         link.appendChild(elem);
+                        link.appendChild(sp);
                         
                     }else {
                         elem.setAttribute("src", "Images/Automater-128.png");
-                        link.innerHTML = file.toString();
                         link.value = path.join(homedir,file.toString(),'/');
+                        let sp = document.createElement('span');
+                        sp.textContent = file.toString();
                         link.appendChild(elem);
+                        link.appendChild(sp);
                         
                     }
                     link.addEventListener('click', () => {
@@ -64,7 +110,6 @@ function init(){
 *   will erase and create new display if so
 */
 function clicked(clicked_object){
-  
    
     if(fs.statSync(path.join(clicked_object.value)).isDirectory()){
         
@@ -96,13 +141,15 @@ function clicked(clicked_object){
                            
                             elem.setAttribute("src", "Images/Folder-128.png");
                             
-                            link.innerHTML = file.toString();
                             link.value = path.join(homedir,file.toString(),'/');
+                            let sp = document.createElement('span');
+                            sp.textContent = file.toString();
                             link.appendChild(elem);
+                            link.appendChild(sp);
                             
                         }else {
                             if(file.toString().match(/exe/)){
-                                elem.setAttribute("src", "Images/Automater-128.png");
+                                elem.setAttribute("src", "Images/Automator-128.png");
                             }
                             else if(file.toString().match(/jpg|jpeg|png/)){
                                 elem.setAttribute("src", "Images/iPhoto-128.png");
@@ -120,15 +167,16 @@ function clicked(clicked_object){
                                 elem.setAttribute("src", "Images/File Blank-128.png");
                             }
                             
-                            link.innerHTML = file.toString();
                             link.value = path.join(homedir,file.toString(),'/');
+                            let sp = document.createElement('span');
+                            sp.textContent = file.toString();
                             link.appendChild(elem);
+                            link.appendChild(sp);
                             
                         }
                         link.addEventListener('click', () => {
                             clicked(link);
                         })
-                        console.log(path.join(homedir,file));
                         li.appendChild(link);
                         display_grid.appendChild(li); 
 
@@ -142,3 +190,6 @@ function clicked(clicked_object){
         })
     }
 }
+
+
+module.exports. clickEvent = clickEvent;

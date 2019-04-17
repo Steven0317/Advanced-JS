@@ -13,6 +13,7 @@
     "electron": "^4.0.5",
     "get-folder-size": "^2.0.1",
     "hidefile": "^2.0.0",
+    "pixi.js": "^4.8.7",
     "three": "^0.101.1",
     "trash": "^5.2.0"
   },

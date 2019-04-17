@@ -19,7 +19,11 @@ button {
   color: #444;
   text-align: center;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 10px;
+}
+button > img,
+button > span{
+  vertical-align: center;
 }
 
 #container{
@@ -34,9 +38,9 @@ button {
   font-family: monospace;
   background: #444;
   color: white;
-  flex: 1 1 25%;
-  min-width: 25%;
-  max-width: 25%;
+  flex: 1 1 15%;
+  min-width: 15%;
+  max-width: 15%;
   padding-top: 30px;
   transition: 0.5s;
   text-align: center;
@@ -75,19 +79,26 @@ button {
   color: #fff;
 }
 #treeview{
+  display: inline-block;
   background: #eee;
   height: 100%;
   width: 100%;
-  flex: 2 1 75%;
-  transition: margin-left .5s;
-  overflow: auto
+  flex: 2 1 85%;
+}
+#treeview canvas{
+  vertical-align: top;
+  width: 100%;
+  height: 100%;
 }
 #grid {
   background: transparent;
   display: inline-grid;
   grid-template-columns: auto auto auto auto auto;
   background-color: #eee;
+  top: 50px;
   max-width: 800px;
+  max-height: 550px;
+  overflow: auto
 }
 
 .grid-item{
@@ -96,6 +107,7 @@ button {
   background: transparent;
   border: 0;
   width: 100px;
-  height: 100px;
+  max-width: 147px;
+  max-height: 100px;
   text-align: center;
 }
