@@ -8,14 +8,17 @@ body {
 }
 
 button {
-  background-color: Transparent;
+  background: transparent;
   background-repeat:no-repeat;
+  width: 100%;
+  height: 100%;
   border: none;
   cursor:pointer;
   overflow: hidden;
   outline:none;
-  color: white;
-  text-align: left;
+  color: #444;
+  text-align: center;
+  font-family: monospace;
   font-size: 12px;
 }
 
@@ -72,22 +75,27 @@ button {
   color: #fff;
 }
 #treeview{
+  background: #eee;
   height: 100%;
   width: 100%;
   flex: 2 1 75%;
   transition: margin-left .5s;
+  overflow: auto
 }
-#display {
-  display: grid;
-  grid-gap: 50px;
-  grid-template-columns:  auto auto auto;
-  background-color: #fff;
-  padding: 10px;
+#grid {
+  background: transparent;
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto;
+  background-color: #eee;
+  max-width: 800px;
 }
-#display div{
+
+.grid-item{
+  display: block;
+  padding: 2px 2px;
   background: transparent;
   border: 0;
-  padding: 20px;
-  font-size: 20px;
+  width: 100px;
+  height: 100px;
   text-align: center;
 }
