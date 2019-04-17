@@ -33,13 +33,13 @@ function init(){
 
                    
                     if(fs.statSync(path.join(homedir,file)).isDirectory()) {
-                        elem.setAttribute("src", "Images/folder.png");
+                        elem.setAttribute("src", "Images/Folder-128.png");
                         link.innerHTML = file.toString();
                         link.value = path.join(homedir,file.toString(),'/');
                         link.appendChild(elem);
                         
                     }else {
-                        elem.setAttribute("src", "Images/binary.png");
+                        elem.setAttribute("src", "Images/Automater-128.png");
                         link.innerHTML = file.toString();
                         link.value = path.join(homedir,file.toString(),'/');
                         link.appendChild(elem);
@@ -94,7 +94,7 @@ function clicked(clicked_object){
 
                         if(fs.statSync(path.join(homedir,file)).isDirectory()) {
                            
-                            elem.setAttribute("src", "Images/folder.png");
+                            elem.setAttribute("src", "Images/Folder-128.png");
                             
                             link.innerHTML = file.toString();
                             link.value = path.join(homedir,file.toString(),'/');
@@ -102,22 +102,22 @@ function clicked(clicked_object){
                             
                         }else {
                             if(file.toString().match(/exe/)){
-                                elem.setAttribute("src", "Images/binary.png");
+                                elem.setAttribute("src", "Images/Automater-128.png");
                             }
                             else if(file.toString().match(/jpg|jpeg|png/)){
-                                elem.setAttribute("src", "Images/image.png");
+                                elem.setAttribute("src", "Images/iPhoto-128.png");
                             }
                             else if(file.toString().match(/mov|mp4|wmv|avi/)){
-                                elem.setAttribute("src", "Images/movie.png");
+                                elem.setAttribute("src", "Images/iMovie-128.png");
                             }
                             else if(file.toString().match(/pdf/)){
-                                elem.setAttribute("src", "Images/pdf.png");
+                                elem.setAttribute("src", "Images/Text-edit-128.png");
                             }
                             else if(file.toString().match(/txt/)){
-                                elem.setAttribute("src", "Images/text.png");
+                                elem.setAttribute("src", "Images/Text-edit-128.png");
                             }
                             else{
-                                elem.setAttribute("src", "Images/blank.png");
+                                elem.setAttribute("src", "Images/File Blank-128.png");
                             }
                             
                             link.innerHTML = file.toString();
