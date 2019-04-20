@@ -111,7 +111,7 @@ function createObjects(files, homedir){
                         rect.drawRect((i) * rectWidth, j * rectHeight, rectWidth,rectHeight);
                         rect.endFill();
                     }
-                    else if(file.toString().match(/jpg|jpeg|png|gif/)){
+                    else if(file.toString().match(/jpg|jpeg|png|gif|JPG|JPEG/)){
                         rect.beginFill(colorDict['pic'],1)
                         rect.drawRect((i) * rectWidth, j * rectHeight, rectWidth,rectHeight);
                         rect.endFill();

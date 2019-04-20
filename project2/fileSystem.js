@@ -76,7 +76,7 @@ function objectClick(clicked_path){
             renderer.createObjects(file, homedir);
         })
 
-    }else if(clicked_path.match(/.txt|.log|.dat|.json/)){
+    }else {
         readFile(clicked_path);
     }
 }
