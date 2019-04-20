@@ -4,6 +4,10 @@ const fs = require('fs');
 const hide = require('hidefile');
 const path = require('path');
 
+
+selected = [];
+selectedPath = null;
+
 /*  
 *   each object will be given a color from this
 *   dictionary
@@ -20,9 +24,9 @@ colorDict = {
 */
 const style = new PIXI.TextStyle({
     fontFamily: 'Monospace',
-    fontSize: 16,
+    fontSize: 14,
     wordWrap: true,
-    wordWrapWidth: 100
+    wordWrapWidth: 15
 })
 /*
 *   Initialize the renderer engine and append to doc
@@ -47,25 +51,39 @@ function Init(){
     app.stage.addChild(container);
     container.x = 0;
     container.y = 0;
-
-    container.pivot.x =0;
-    container.pivot.y = 0;
-
 }
 
 function createObjects(files, homedir){
+
+    
     /*
-    *   create a rectangle object for each file
-    *   params that are passed 
+    *   Calcualte non hidden files
     */
-    if(files.length > 5){
-        rectWidth = Math.floor(app.view.width / 5);
+    let available = [];
+    files.forEach(file => {
+
+     let result = hide.shouldBeHiddenSync( path.join(homedir,file))
+
+        if(!result){
+            available.push(file);
+        }
+    
+    })
+   
+    /*
+    *   If we have enough files to more that
+    *   one row we set the width accordingly 
+    */
+    if(available.length > 6){
+        rectWidth = app.view.width / 7;
     }else {
-        rectWidth = Math.floor(app.view.width / files.length);
+        rectWidth = app.view.width / available.length;
     }
-    rectHeight = Math.floor(app.view.height / Math.round(files.length/5));
+    
+    rectHeight = app.view.height / Math.ceil(available.length/7);
     i = 0;
     j = 0;
+ 
     files.forEach(file => {
      
         /*
@@ -73,7 +91,8 @@ function createObjects(files, homedir){
         */
 
         hide.shouldBeHidden( path.join(homedir,file),(err,result) => {
-            
+        
+       
             if(err !== null) throw err;
 
             if(!result){
@@ -119,7 +138,7 @@ function createObjects(files, homedir){
                     }
                 
                     
-                }
+               }
                 rect.interactive = true;
                 rect.buttonMode = true;
 
@@ -147,6 +166,9 @@ function createObjects(files, homedir){
                 rect.mouseout = function(mouseData){
                     this.alpha = 1;
                 }
+                
+                rect.on('rightdown', highlightObject.bind(undefined, path.join(homedir,file), rect));
+                
                 rect.on('click', system.clickEvent.bind(undefined, path.join(homedir,file)))
                 
                 /*
@@ -155,7 +177,7 @@ function createObjects(files, homedir){
                 container.addChild(rect);
                 container.addChild(text);
             
-                if(i >5){
+                if(i > 6){
                     i = 0;
                     j += 1;
                 }else {
@@ -166,15 +188,46 @@ function createObjects(files, homedir){
     });
    
     
+
+ 
+ 
 }
 
+
+/*
+* keeps only one highlighted object in scope at a time
+* changes tint of box to show difference
+*/
+function highlightObject(path, btn){
+
+    if(selected.length >= 1){
+        let deselect = selected.pop();
+        deselect.tint = 0xFFFFFF;
+        btn.tint = 0xCCCCCC;
+        selected.push(btn);
+        selectedPath = path;
+    }else {
+        btn.tint = 0xCCCCCC;
+        selected.push(btn);
+        selectedPath = path;
+    }
+    system.displayStats(selectedPath);
+    
+}
+
+// removes all children from canvas container
 function clearScreen(){
     while(container.children.length > 0){
         let child = container.getChildAt(0);
         container.removeChild(child);
     }
 }
+//returns the path of highlighted object to fileSystem
+function returnPath(){
+    return selectedPath;
+}
 
+module.exports.returnPath = returnPath;
 module.exports.clearScreen = clearScreen;
 module.exports.Init = Init;
 module.exports.createObjects = createObjects;

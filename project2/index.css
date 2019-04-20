@@ -8,18 +8,18 @@ body {
 }
 
 button {
-  background: transparent;
+  background: #444;
   background-repeat:no-repeat;
   width: 100%;
-  height: 100%;
+  height: 50px;
   border: none;
   cursor:pointer;
   overflow: hidden;
   outline:none;
-  color: #444;
+  color:#fff;
   text-align: center;
   font-family: monospace;
-  font-size: 10px;
+  font-size: 28px;
 }
 button > img,
 button > span{
@@ -45,7 +45,20 @@ button > span{
   transition: 0.5s;
   text-align: center;
 }
-
+#navbar stats{
+  font-family:  monospace;
+  background: #444;
+  color: white;
+  font-size: 6;
+  min-width: 15%;
+  max-width: 15%;
+  max-height: 50;
+}
+#navbar p{
+  
+  word-break: break-all;
+  white-space: normal;
+}
 #navbar a{
   padding: 8px 16px;
   text-decoration: none;
@@ -62,21 +75,12 @@ button > span{
   border: 0;
   outline: 0;
   border-bottom: 2px solid #89cff0;
+  color: #eee;
   padding: 8px 16px;
   background: transparent;
   width: 100px;
   height: 15px;
   transition: 0.3s
-}
-#navbar ::placeholder{
-  font-family: monospace;
-  color: #fff;
-  font-size: 18px;
-  text-align: center;
-}
-#navbar input[type=text]:focus{
-  font-family: monospace;
-  color: #fff;
 }
 #treeview{
   display: inline-block;
@@ -92,23 +96,18 @@ button > span{
   overflow-y: auto;
 }
 #grid {
-  background: transparent;
-  display: inline-grid;
-  grid-template-columns: auto auto auto auto auto;
   background-color: #eee;
   top: 50px;
   max-width: 800px;
   max-height: 550px;
   overflow: auto
 }
-
-.grid-item{
-  display: block;
-  padding: 2px 2px;
-  background: transparent;
-  border: 0;
-  width: 100px;
-  max-width: 147px;
-  max-height: 100px;
-  text-align: center;
+#grid child{
+  color: #444;
+  font-family:  monospace;
+  font-weight: 12;
+  width: 800px;
+  height: 550px;
+  overflow-x: hidden;
 }
+

@@ -4,28 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="index.css">
+    
 
 </head>
 
 <body>
+      
    <div id="container">
        <div id="navbar"> 
-           <a href='#'>Delete</a>
-           <a href='#'>Add</a>
-           <a href='#'>Move</a> 
-           <a href='#'>Copy</a>
-           <a href="#" value="/">Root</a> 
+           <a href='#' id="del">Delete</a>
+           <a href='#' id="add">Add</a>
+           <a href='#' id="mov">Move</a> 
+           <a href='#' id="cop">Copy</a>
+           <a href="#" id="root">Root</a> 
+           <a href="#" id="Back">Back</a>
+           <hr color="white">
+           <p> File Stats</p>
+           <hr color="white">
+           <div id="stats">
+           </div>
         </div>
         <div id="treeview">
-            <div id="grid">
-            </div>
+            <div id="grid"></div>
         </div>
     </div>
-
     <script>
-        require('./fileSystem.js')
-        require('./renderer.js')
-    </script>
+            require('./fileSystem.js')
+            require('./renderer.js')
+    </script>   
 </body>
 
 </html>
