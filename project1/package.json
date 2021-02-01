@@ -13,7 +13,7 @@
     "blessed-contrib": "^4.8.10",
     "chalk": "^2.4.2",
     "cli-cursor": "^2.1.0",
-    "marked": "^0.6.0",
+    "marked": "^0.7.0",
     "marked-terminal": "^3.2.0",
     "request": "^2.88.0",
     "three": "^0.101.1",
